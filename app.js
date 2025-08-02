@@ -11,7 +11,10 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 const AppError = require("./utils/appError");
-// const userRouter = require('./routes/userRoutes');
+const userRouter = require("./routes/userRoutes");
+const productRouter = require("./routes/userRoutes");
+const orderRouter = require("./routes/userRoutes");
+const cartRouter = require("./routes/userRoutes");
 
 const app = express();
 
@@ -39,13 +42,6 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-// const limiter = rateLimit({
-//   max: 1000,
-//   windowMs: 60 * 60 * 1000,
-//   message: "Too many requests from this IP, please try again in an hour!",
-// });
-// app.use("/api", limiter);
-
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
@@ -61,12 +57,14 @@ app.use(express.json());
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  // console.log(req.headers);
   next();
 });
 
 // 3) ROUTES
-// app.use('/api/v1/users', userRouter);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/product", productRouter);
+app.use("/api/v1/cart", cartRouter);
+app.use("/api/v1/order", orderRouter);
 
 // 4) 404 Handler
 app.all("*", (req, res, next) => {
